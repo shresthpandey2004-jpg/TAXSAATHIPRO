@@ -1,0 +1,51 @@
+🚀 TAXSAATHI PRO - QUICK START GUIDE
+=====================================
+
+📋 PREREQUISITES:
+- Node.js 18+ installed
+- PostgreSQL installed and running
+
+⚡ QUICK SETUP (5 MINUTES):
+
+1. INSTALL DEPENDENCIES:
+   npm install
+   cd frontend && npm install
+   cd ../backend && npm install
+
+2. SETUP DATABASE:
+   Create PostgreSQL database named 'taxsaathi'
+   
+3. CONFIGURE BACKEND:
+   cd backend
+   cp .env.example .env
+   Edit .env with your database credentials
+   
+4. RUN MIGRATIONS:
+   npx prisma migrate dev
+   npx prisma generate
+
+5. START SERVERS:
+   From root folder:
+   npm run dev
+   
+   OR separately:
+   Terminal 1: cd backend && npm run dev
+   Terminal 2: cd frontend && npm run dev
+
+6. OPEN BROWSER:
+   Frontend: http://localhost:5173
+   Backend: http://localhost:5000
+
+🎉 DONE! Your TaxSaathi Pro is running!
+
+📝 DEFAULT PORTS:
+- Frontend: 5173
+- Backend: 5000
+
+🔧 TROUBLESHOOTING:
+- Database error? Check DATABASE_URL in backend/.env
+- Port in use? Change PORT in backend/.env
+- Module not found? Run npm install again
+
+📚 For detailed setup, see SETUP_GUIDE.md
+✨ For features list, see FEATURES.md

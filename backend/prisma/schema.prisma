@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  name          String
+  pan           String?
+  dob           DateTime?
+  address       String?
+  state         String?
+  phone         String?
+  role          Role      @default(USER)
+  subscription  String    @default("FREE")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  incomes       Income[]
+  expenses      Expense[]
+  filings       Filing[]
+}
+
+model Income {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  financialYear String
+  source        String
+  amount        Float
+  platform      String?
+  tds           Float     @default(0)
+  isForeign     Boolean   @default(false)
+  currency      String    @default("INR")
+  createdAt     DateTime  @default(now())
+}
+
+model Expense {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  financialYear String
+  category      String
+  amount        Float
+  description   String?
+  date          DateTime
+  createdAt     DateTime  @default(now())
+}
+
+model Filing {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  financialYear   String
+  status          FilingStatus  @default(DRAFT)
+  taxableIncome   Float?
+  taxPayable      Float?
+  regime          String?
+  acknowledgement String?
+  filedAt         DateTime?
+  createdAt       DateTime      @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+  CA
+}
+
+enum FilingStatus {
+  DRAFT
+  UNDER_REVIEW
+  FILED
+  ACKNOWLEDGED
+}
