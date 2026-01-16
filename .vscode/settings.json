@@ -1,6 +1,8 @@
 {
   "typescript.tsdk": "frontend/node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": true,
   "eslint.workingDirectories": [
     "frontend",
     "backend"
@@ -8,5 +10,7 @@
   "files.associations": {
     "*.tsx": "typescriptreact",
     "*.ts": "typescript"
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always"
 }
