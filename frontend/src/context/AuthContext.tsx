@@ -44,14 +44,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Demo mode - check localStorage
       const storedUsers = JSON.parse(localStorage.getItem('demo_users') || '[]')
-      const user = storedUsers.find((u: any) => u.email === email && u.password === password)
+      const foundUser = storedUsers.find((u: any) => u.email === email && u.password === password)
       
-      if (user) {
-        const demoUser = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          subscription: 'FREE'
+      if (foundUser) {
+        const demoUser: User = {
+          id: foundUser.id as string,
+          email: foundUser.email as string,
+          name: foundUser.name as string,
+          subscription: 'FREE' as const
         }
         localStorage.setItem('token', 'demo-token-' + Date.now())
         localStorage.setItem('demo_current_user', JSON.stringify(demoUser))
@@ -80,8 +80,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('User already exists')
       }
       
+      const userId = 'user-' + Date.now()
       const newUser = {
-        id: 'user-' + Date.now(),
+        id: userId,
         email,
         password,
         name,
@@ -91,11 +92,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       storedUsers.push(newUser)
       localStorage.setItem('demo_users', JSON.stringify(storedUsers))
       
-      const demoUser = {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-        subscription: 'FREE'
+      const demoUser: User = {
+        id: userId,
+        email: email,
+        name: name,
+        subscription: 'FREE' as const
       }
       
       localStorage.setItem('token', 'demo-token-' + Date.now())
