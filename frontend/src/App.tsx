@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
@@ -13,8 +13,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Toaster 
           position="top-right"
           toastOptions={{
@@ -49,8 +49,8 @@ function App() {
             </ProtectedRoute>
           } />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   )
 }
 

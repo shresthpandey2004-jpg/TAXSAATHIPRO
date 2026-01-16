@@ -44,7 +44,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast.success('Login successful!')
       navigate('/dashboard')
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Login failed')
+      const errorMessage = error.response?.data?.error || 'Login failed'
+      toast.error(errorMessage)
       throw error
     }
   }
@@ -57,7 +58,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast.success('Account created successfully!')
       navigate('/dashboard')
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Signup failed')
+      const errorMessage = error.response?.data?.error || 'Signup failed'
+      toast.error(errorMessage)
       throw error
     }
   }
