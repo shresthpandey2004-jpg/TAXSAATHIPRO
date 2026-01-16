@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { authAPI } from '../services/api'
-import { User, AuthContextType } from '../types'
+import type { User, AuthContextType } from '../types'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
