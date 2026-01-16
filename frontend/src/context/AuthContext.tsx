@@ -27,10 +27,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        const { data } = await authAPI.getProfile()
-        setUser(data.user)
+        // Demo mode - get from localStorage
+        const demoUser = localStorage.getItem('demo_current_user')
+        if (demoUser) {
+          setUser(JSON.parse(demoUser))
+        }
       } catch (error) {
         localStorage.removeItem('token')
+        localStorage.removeItem('demo_current_user')
       }
     }
     setLoading(false)
@@ -38,13 +42,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const { data } = await authAPI.login(email, password)
-      localStorage.setItem('token', data.token)
-      setUser(data.user)
-      toast.success('Login successful!')
-      navigate('/dashboard')
+      // Demo mode - check localStorage
+      const storedUsers = JSON.parse(localStorage.getItem('demo_users') || '[]')
+      const user = storedUsers.find((u: any) => u.email === email && u.password === password)
+      
+      if (user) {
+        const demoUser = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          subscription: 'FREE'
+        }
+        localStorage.setItem('token', 'demo-token-' + Date.now())
+        localStorage.setItem('demo_current_user', JSON.stringify(demoUser))
+        setUser(demoUser)
+        toast.success('Login successful! (Demo Mode)')
+        navigate('/dashboard')
+      } else {
+        toast.error('Invalid credentials')
+        throw new Error('Invalid credentials')
+      }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Login failed'
+      const errorMessage = error.message || 'Login failed'
       toast.error(errorMessage)
       throw error
     }
@@ -52,13 +71,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signup = async (name: string, email: string, password: string) => {
     try {
-      const { data } = await authAPI.signup(name, email, password)
-      localStorage.setItem('token', data.token)
-      setUser(data.user)
-      toast.success('Account created successfully!')
+      // Demo mode - save to localStorage
+      const storedUsers = JSON.parse(localStorage.getItem('demo_users') || '[]')
+      
+      // Check if user already exists
+      if (storedUsers.find((u: any) => u.email === email)) {
+        toast.error('User already exists')
+        throw new Error('User already exists')
+      }
+      
+      const newUser = {
+        id: 'user-' + Date.now(),
+        email,
+        password,
+        name,
+        subscription: 'FREE'
+      }
+      
+      storedUsers.push(newUser)
+      localStorage.setItem('demo_users', JSON.stringify(storedUsers))
+      
+      const demoUser = {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        subscription: 'FREE'
+      }
+      
+      localStorage.setItem('token', 'demo-token-' + Date.now())
+      localStorage.setItem('demo_current_user', JSON.stringify(demoUser))
+      setUser(demoUser)
+      toast.success('Account created successfully! (Demo Mode)')
       navigate('/dashboard')
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Signup failed'
+      const errorMessage = error.message || 'Signup failed'
       toast.error(errorMessage)
       throw error
     }
@@ -66,6 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('demo_current_user')
     setUser(null)
     toast.success('Logged out successfully')
     navigate('/')
